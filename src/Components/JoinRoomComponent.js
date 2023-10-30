@@ -1,10 +1,23 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
+import { v4 as uuidV4 } from "uuid";
 
 const JoinRoomComponent = () => {
     const [loungeId, setLoungeId] = useState("");
     const [userId, setUserId] = useState("");
 
-    useEffect(() => { }, []);
+    const createLoungeId = (e) =>{
+        e.preventDefault();
+
+        const roomId = uuidV4();
+        toast.success("New Lounge has been created")
+        setLoungeId(roomId)
+    }
+
+    // useEffect(()=>{
+    //     createLoungeId();
+    // },[])
+    
     return (
         <div>
             <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
@@ -101,7 +114,7 @@ const JoinRoomComponent = () => {
 
                         <p className="text-center text-sm text-gray-500">
                             Don't have Lounge id?
-                            <a className="underline" href="">Create one </a>
+                            <a onClick={createLoungeId} className="underline" href=''>Create one </a>
                         </p>
                     </form>
                 </div>
