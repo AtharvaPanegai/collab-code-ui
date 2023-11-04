@@ -1,10 +1,66 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+// import toast from 'react-hot-toast';
+import { ToastContainer, toast } from 'react-toastify';
+import { v4 as uuidV4 } from "uuid";
+
+
+const toastOptions = {
+    position: "bottom-center",
+    autoClose: 2000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "dark",
+}
 
 const JoinRoomComponent = () => {
+
+    const navigate = useNavigate();
+
     const [loungeId, setLoungeId] = useState("");
     const [userId, setUserId] = useState("");
 
-    useEffect(() => { }, []);
+    const createLoungeId = (e) => {
+        e.preventDefault();
+
+        const roomId = uuidV4();
+        setLoungeId(roomId);
+
+        // alert("New Lounge is created");
+
+        toast.success('New Lounge has been created!', toastOptions);
+    }
+
+    const joinLounge = () => {
+        if (!loungeId || !userId) {
+            toast.error("Lounge Id and username is required", toastOptions)
+            return;
+        }
+
+        // redirect to editor
+        navigate(`/editor/${loungeId}`, {
+            state: {
+                userId
+            }
+        })
+
+
+    }
+
+    const handleEnterKeyUp = (e)=>{
+        if(e.code === 'Enter'){
+            joinLounge();
+        }
+    }
+
+
+    // useEffect(()=>{
+    //     createLoungeId();
+    // },[])
+
     return (
         <div>
             <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
@@ -34,6 +90,7 @@ const JoinRoomComponent = () => {
                                     type="text"
                                     className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
                                     placeholder="Enter Lounge Id"
+                                    onKeyUp={handleEnterKeyUp}
                                 />
 
                                 <span className="absolute inset-y-0 end-0 grid place-content-center px-4">
@@ -65,6 +122,7 @@ const JoinRoomComponent = () => {
                                     type="username"
                                     className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
                                     placeholder="Enter Username"
+                                    onKeyUp={handleEnterKeyUp}
                                 />
 
                                 <span className="absolute inset-y-0 end-0 grid place-content-center px-4">
@@ -93,6 +151,7 @@ const JoinRoomComponent = () => {
                         </div>
 
                         <button
+                            onClick={joinLounge}
                             type="submit"
                             className="block w-full rounded-lg bg-indigo-600 px-5 py-3 text-sm font-medium text-white"
                         >
@@ -101,7 +160,7 @@ const JoinRoomComponent = () => {
 
                         <p className="text-center text-sm text-gray-500">
                             Don't have Lounge id?
-                            <a className="underline" href="">Create one </a>
+                            <a onClick={createLoungeId} className="underline" href=''>Create one </a>
                         </p>
                     </form>
                 </div>
